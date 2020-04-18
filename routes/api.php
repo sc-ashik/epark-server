@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['prefix' => 'v1'], function () {
-    Route::post('/login', 'UsersController@login');
-    Route::post('/register', 'UsersController@register');
+    Route::post('/login', 'API\UserController@login');
+    Route::post('/register', 'API\UserController@register');
 
     Route::group(['middleware' => 'auth:api'], function(){
-        Route::get('/logout', 'UsersController@logout');
+        Route::get('/logout', 'API\UserController@logout');
         Route::get('/details', 'API\UserController@details');
         Route::get('/user', function (Request $request) {
             return $request->user();

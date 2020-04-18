@@ -16,14 +16,23 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function login()
+   public function login()
     {
         if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
             $user = Auth::user();
-            $success['token'] =  $user->createToken('MyApp')->accessToken;
-            return response()->json(['success' => $success], $this->successStatus);
+            $success['token'] = $user->createToken('appToken')->accessToken;
+           //After successfull authentication, notice how I return json parameters
+            return response()->json([
+              'success' => true,
+              'token' => $success,
+              'user' => $user
+          ]);
         } else {
-            return response()->json(['error' => 'Unauthorised'], 401);
+       //if authentication is unsuccessfull, notice how I return json parameters
+          return response()->json([
+            'success' => false,
+            'message' => 'Invalid Email or Password',
+        ], 401);
         }
     }
     /**
@@ -35,19 +44,24 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
             'password' => 'required',
-            'c_password' => 'required|same:password',
         ]);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 401);
+          return response()->json([
+            'success' => false,
+            'message' => $validator->errors(),
+          ], 401);
         }
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
-        $success['token'] =  $user->createToken('MyApp')->accessToken;
-        $success['name'] =  $user->name;
-        return response()->json(['success' => $success], $this->successStatus);
+        $success['token'] = $user->createToken('appToken')->accessToken;
+        return response()->json([
+          'success' => true,
+          'token' => $success,
+          'user' => $user
+      ]);
     }
     /**
      * details api
