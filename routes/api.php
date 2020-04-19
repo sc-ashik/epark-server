@@ -24,6 +24,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('/user', function (Request $request) {
             return $request->user();
         });
+        Route::get('/transactions/{parking_no}', 'TransactionController@getTransaction');
     });
 });
 // Route::post('login', 'API\UserController@login');
