@@ -23,6 +23,7 @@ class CreateTransactionsTable extends Migration
             $table->foreign("unlock_requested_by")->references('id')->on('users');
             $table->string('categories_applied')->nullable();
             $table->double('fee')->nullable();
+            $table->timestamp("unlocked_at")->nullable();
             $table->timestamps();
 
         });

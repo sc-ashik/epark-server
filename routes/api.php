@@ -17,14 +17,13 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1'], function () {
     Route::post('/login', 'API\UserController@login');
     Route::post('/register', 'API\UserController@register');
+    Route::get('/lock/{parking_id}', 'TransactionController@lock');
+
 
     Route::group(['middleware' => 'auth:api'], function(){
         Route::get('/logout', 'API\UserController@logout');
-        Route::get('/details', 'API\UserController@details');
-        Route::get('/user', function (Request $request) {
-            return $request->user();
-        });
-        Route::get('/transactions/{parking_no}', 'TransactionController@getTransaction');
+        Route::get('/transactions/{parking_id}', 'TransactionController@getTransaction');
+        Route::get('/processpayment/{parking_id}', 'TransactionController@processPayment');
     });
 });
 // Route::post('login', 'API\UserController@login');

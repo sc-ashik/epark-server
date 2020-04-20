@@ -22,6 +22,8 @@ class CreateCompletedTransactionsTable extends Migration
             $table->unsignedBigInteger('unlock_requested_by');
             $table->foreign("unlock_requested_by")->references('id')->on('users');
             $table->string('categories_applied');
+            $table->double('fee');
+            $table->timestamp("unlocked_at")->nullable();
             $table->unsignedBigInteger('transaction_id');
             $table->foreign('transaction_id')->references('transaction_id')->on('payments');
             $table->timestamps();
