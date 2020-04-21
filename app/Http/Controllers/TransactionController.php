@@ -92,8 +92,8 @@ class TransactionController extends Controller
     }
 
     function getHoursDiff($trans){
-        return 3.6;
-        // return (new Carbon($trans->locked_at))->floatDiffInRealHours($trans->unlock_requested_at);
+        // return 3.6;
+        return (new Carbon($trans->locked_at))->floatDiffInRealHours($trans->unlock_requested_at);
     }
 
     public function processPayment(Request $req,$parking_no){
