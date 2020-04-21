@@ -14,7 +14,9 @@ class TransactionController extends Controller
 {
     public $successStatus = 200;
 
-    public function lock(Request $req,$parking_id){
+    public function lock(Request $req,$parking_no){
+        $parking_id=$this->getParkingId($parking_no);
+
         if(!Parking::find($parking_id)){
             return $this->errorResponse("Invalid parking no");
         }
@@ -28,7 +30,9 @@ class TransactionController extends Controller
             return $this->errorResponse("Already locked");
         }
     }
-    public function getTransaction(Request $req,$parking_id){
+    public function getTransaction(Request $req,$parking_no){
+        $parking_id=$this->getParkingId($parking_no);
+        // return $this->errorResponse($parking_no.'= '.$parking_id);
         $trans=Transaction::where('parking_id',$parking_id)->first();
         if($trans){
             $trans->unlock_requested_at=Carbon::now()->toDateTimeString();
@@ -42,7 +46,7 @@ class TransactionController extends Controller
             [
                 'success' => true,
                 'details' => [
-                    'parking_no'=>$parking_id,
+                    'parkingNo'=>$trans->parking->short_area_name.$trans->parking->zip_code.$parking_id,
                     'hours'=>(int)($diff),
                     'minutes'=>(int)(($diff-(int)$diff)*60),
                     'category'=>$trans->categories_applied,
@@ -50,7 +54,7 @@ class TransactionController extends Controller
                     'amountDue'=>$trans->fee
                 ],
                 // 'trans'=>$trans 
-            ]); 
+            ],200); 
         }
         else{
             if(!Parking::find($parking_id)){
@@ -61,9 +65,9 @@ class TransactionController extends Controller
         }
     }
 
-    // public function getParkingId($parking_no){
-    //     return substr($parking_no,8);
-    // }
+    public function getParkingId($parking_no){
+        return substr($parking_no,8);
+    }
 
 
     function errorResponse($msg){
@@ -92,12 +96,13 @@ class TransactionController extends Controller
         // return (new Carbon($trans->locked_at))->floatDiffInRealHours($trans->unlock_requested_at);
     }
 
-    public function processPayment(Request $req,$parking_id){
+    public function processPayment(Request $req,$parking_no){
+        $parking_id=$this->getParkingId($parking_no);
+
         $trans=Transaction::where('parking_id',$parking_id)->first();
         $p=Payment::create(['amount_paid'=>$trans->fee,'paid_by'=>Auth::user()->id]);
-
+        unset($trans->id);
         $trans->transaction_id=$p->id;
-
         CompletedTransaction::create($trans->toarray());
 
         if($this->unlock($trans)){
