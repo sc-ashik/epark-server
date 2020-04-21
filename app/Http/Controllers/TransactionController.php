@@ -23,7 +23,7 @@ class TransactionController extends Controller
         $trans=Transaction::where('parking_id',$parking_id)->first();
         if(!$trans)
         {
-            $tr=Transaction::create(['parking_id'=>$parking_id]);
+            $tr=Transaction::create(['parking_id'=>$parking_id,'locked_at'=>Carbon::now()->toDateTimeString()]);
             return response()->json(['success' => true], $this->successStatus);
         }
         else{
