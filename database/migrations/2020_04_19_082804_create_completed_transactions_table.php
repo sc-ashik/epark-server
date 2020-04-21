@@ -17,13 +17,13 @@ class CreateCompletedTransactionsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('parking_id');
             $table->foreign('parking_id')->references('id')->on('parkings');
-            $table->timestamp("locked_at");
-            $table->timestamp("unlock_requested_at")->nullable();
+            $table->dateTime("locked_at");
+            $table->dateTime("unlock_requested_at");
             $table->unsignedBigInteger('unlock_requested_by');
             $table->foreign("unlock_requested_by")->references('id')->on('users');
             $table->string('categories_applied');
             $table->double('fee');
-            $table->timestamp("unlocked_at")->nullable();
+            $table->dateTime("unlocked_at");
             $table->unsignedBigInteger('transaction_id');
             $table->foreign('transaction_id')->references('transaction_id')->on('payments');
             $table->timestamps();
