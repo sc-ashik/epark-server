@@ -103,9 +103,11 @@ class TransactionController extends Controller
         $p=Payment::create(['amount_paid'=>$trans->fee,'paid_by'=>Auth::user()->id]);
         unset($trans->id);
         $trans->transaction_id=$p->id;
+
+        $unlocked=$this->unlock($trans);
         CompletedTransaction::create($trans->toarray());
 
-        if($this->unlock($trans)){
+        if($unlocked){
             $trans->delete();
             return $this->succesResponse("unlocked");
         }
@@ -115,7 +117,7 @@ class TransactionController extends Controller
     }
 
     function unlock($trans){
-        $trans->unlocked_at=Carbon::now()->toTimeString();
+        $trans->unlocked_at=Carbon::now()->toDateTimeString();
         return true;
     }
     
