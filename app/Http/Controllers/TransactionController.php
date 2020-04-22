@@ -126,7 +126,7 @@ class TransactionController extends Controller
                $hoursToPay+=24;
            };
            $lock_day_night->subDay();
-           if($lock_day_night->isSameDay($unlock_requested_at)){
+           if(!$lock_day_night->isSaturDay() && !$lock_day_night->isSunday() && $lock_day_night->isSameDay($unlock_requested_at)){
                $hoursToPay+= $lock_day_night->floatDiffInRealHours($unlock_requested_at);
            }
 
