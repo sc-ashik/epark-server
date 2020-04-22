@@ -100,20 +100,31 @@ class TransactionController extends Controller
         $parking_id=$this->getParkingId($parking_no);
 
         $trans=Transaction::where('parking_id',$parking_id)->first();
-        $p=Payment::create(['amount_paid'=>$trans->fee,'paid_by'=>Auth::user()->id]);
-        unset($trans->id);
-        $trans->transaction_id=$p->id;
+        if($trans){
 
-        $unlocked=$this->unlock($trans);
-        CompletedTransaction::create($trans->toarray());
+            $p=Payment::create(['amount_paid'=>$trans->fee,'paid_by'=>Auth::user()->id]);
+            unset($trans->id);
+            $trans->transaction_id=$p->id;
 
-        if($unlocked){
-            $trans->delete();
-            return $this->succesResponse("unlocked");
+            $unlocked=$this->unlock($trans);
+            CompletedTransaction::create($trans->toarray());
+
+            if($unlocked){
+                $trans->delete();
+                return $this->succesResponse("unlocked");
+            }
+            else{
+                return $this->errorResponse("failed to unlock");
+            }
         }
         else{
-            return $this->errorResponse("failed to unlock");
+            if(!Parking::find($parking_id)){
+                return $this->errorResponse("Invalid parking no");
+            }
+            else
+                return $this->errorResponse("not locked or paid already");
         }
+        
     }
 
     function unlock($trans){

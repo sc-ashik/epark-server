@@ -17,8 +17,14 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1'], function () {
     Route::post('/login', 'API\UserController@login');
     Route::post('/register', 'API\UserController@register');
-    Route::get('/lock/{parking_no}', 'TransactionController@lock');
 
+    //testing api
+    Route::get('/lock/{parking_no}', 'TransactionController@lock');
+    Route::resources([
+        'parking' => 'ParkingController',
+        'feecategory' => 'FeeCategoryController'
+    ]);
+    //
 
     Route::group(['middleware' => 'auth:api'], function(){
         Route::get('/logout', 'API\UserController@logout');

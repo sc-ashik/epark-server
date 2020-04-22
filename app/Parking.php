@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Parking extends Model
 {
     //
+    protected $guarded=[];
     public function feeCategory(){
         return $this->hasOne('App\FeeCategory','id','fee_category');
     }
