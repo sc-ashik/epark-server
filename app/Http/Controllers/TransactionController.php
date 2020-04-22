@@ -93,9 +93,64 @@ class TransactionController extends Controller
 
     function getHoursDiff($trans){
         // return 3.6;
-        return (new Carbon($trans->locked_at))->floatDiffInRealHours($trans->unlock_requested_at);
-    }
+        $locked_at=new Carbon($trans->locked_at);
 
+        $hoursToPay=0;
+        if($locked_at->isSaturday()){
+            $locked_at->addDay(2);
+            $weekDayMidNight=$this->getMidNight($locked_at);
+            $hoursToPay+=$weekDayMidNight->floatDiffInRealHour($locked_at);
+        }
+        if($locked_at->isSunday()){
+            $locked_at->addDay(1);
+            $weekDayMidNight=$this->getMidNight($locked_at);
+            $hoursToPay+=$weekDayMidNight->floatDiffInRealHour($locked_at);
+        }
+
+        $unlock_requested_at=new Carbon($trans->unlock_requested_at);
+        
+        $lock_day_night=$this->getNextDayMidNight($locked_at);
+
+        if($lock_day_night->lessThan($unlock_requested_at)){
+           $hoursToPay+=$locked_at->floatDiffInRealHour($lock_day_night);
+           $lock_day_night->addDay();
+           while($lock_day_night->lessThan($unlock_requested_at)){
+               if($lock_day_night->isSunday()){
+                   $lock_day_night->addDay(2);
+                   continue;
+               }
+               if($lock_day_night->isMonday()){
+                   $lock_day_night->addDay();
+                   continue;
+               }
+               $hoursToPay+=24;
+           };
+           $lock_day_night->subDay();
+           if($lock_day_night->isSameDay($unlock_requested_at)){
+               $hoursToPay+= $lock_day_night->floatDiffInRealHours($unlock_requested_at);
+           }
+
+        }
+        else{
+            $hoursToPay+= $locked_at->floatDiffInRealHours($unlock_requested_at);
+        }
+        return $hoursToPay;
+    }
+    public function getMidNight($d){
+        $day=$d->copy();
+        $day->hour=0;
+        $day->minute=0;
+        $day->second=0;
+        return $day;
+    }
+    public function getNextDayMidNight($d){
+        $day=$d->copy();
+        $day->addDay();
+        $day->hour=0;
+        $day->minute=0;
+        $day->second=0;
+        return $day;
+    }
     public function processPayment(Request $req,$parking_no){
         $parking_id=$this->getParkingId($parking_no);
 
