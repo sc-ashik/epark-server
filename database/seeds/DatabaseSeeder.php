@@ -1,5 +1,6 @@
 <?php
 
+use App\FeeCategory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,5 +13,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UserSeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(FeeCategorySeeder::class);
+        $this->call(ParkingSeeder::class);
+        $this->call(CompletedTransactionSeeder::class);
+        
     }
 }

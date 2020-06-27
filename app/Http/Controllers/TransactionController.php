@@ -99,15 +99,17 @@ class TransactionController extends Controller
         if($locked_at->isSaturday()){
             $locked_at->addDay(2);
             $weekDayMidNight=$this->getMidNight($locked_at);
-            $hoursToPay+=$weekDayMidNight->floatDiffInRealHour($locked_at);
+            $hoursToPay+=$weekDayMidNight->floatDiffInRealHours($locked_at);
         }
         if($locked_at->isSunday()){
             $locked_at->addDay(1);
             $weekDayMidNight=$this->getMidNight($locked_at);
-            $hoursToPay+=$weekDayMidNight->floatDiffInRealHour($locked_at);
+            $hoursToPay+=$weekDayMidNight->floatDiffInRealHours($locked_at);
         }
 
         $unlock_requested_at=new Carbon($trans->unlock_requested_at);
+
+        if($unlock_requested_at->lessThan($locked_at)) return 0;
         
         $lock_day_night=$this->getNextDayMidNight($locked_at);
 
