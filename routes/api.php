@@ -19,12 +19,23 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('/register', 'API\UserController@register');
 
     //testing api
-    Route::get('/lock/{parking_no}', 'TransactionController@lock');
-    Route::resources([
-        'parking' => 'ParkingController',
-        'feecategory' => 'FeeCategoryController'
-    ]);
+
+    Route::group(['middleware' => ['auth:api','role:admin']], function () {
+        Route::post('/lock/{parking_no}', 'TransactionController@lock');
+        Route::resources([
+            'parking' => 'ParkingController',
+            'feecategory' => 'FeeCategoryController'
+        ]);
+    });
+    Route::group(['middleware' => ['auth:api','role:viewer']], function () {
+        Route::resource('parking','ParkingController')->only(["index","show"]);
+        Route::resource('feecategory','FeeCategoryController')->only(["index","show"]);
+    });
+
+
+
     //
+    Route::post('authenticate', 'API\DashboardAuthenticateController@authenticate');
 
     Route::group(['middleware' => 'auth:api'], function(){
         Route::get('/logout', 'API\UserController@logout');
