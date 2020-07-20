@@ -16,8 +16,14 @@ class DashboardAuthenticateController extends Controller
            //After successfull authentication, notice how I return json parameters
             return response()->json([
               'success' => true,
-              'token' => $success,
-              'user' => $user
+              'token' => $success['token'],
+              'user' => [
+                "id"=>$user->id,
+                "name"=>$user->name,
+                "email"=>$user->email,
+                "roles"=>$user->roles->map(function($role){return $role->name;})
+
+            ]
           ]);
         } else {
        //if authentication is unsuccessfull, notice how I return json parameters
@@ -27,4 +33,5 @@ class DashboardAuthenticateController extends Controller
         ], 401);
         }
     }
+    
 }
