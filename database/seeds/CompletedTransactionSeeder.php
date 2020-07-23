@@ -19,7 +19,7 @@ class CompletedTransactionSeeder extends Seeder
     {
         for($i=0;$i<500;$i++){
             $userId=User::all()->random()->id;
-            $locked_at=Carbon::now()->subMinutes(rand(1,24*60*60));
+            $locked_at=Carbon::now()->subMinutes(rand(1,24*60*660));
             $unlock_requested_at=new Carbon($locked_at);
             $unlock_requested_at->addMinutes(rand(5,5*60));
             $fee=$locked_at->floatDiffInRealHours($unlock_requested_at)* FeeCategory::first()->fee;

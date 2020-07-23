@@ -18,6 +18,7 @@ class ParkingSeeder extends Seeder
             "zip_code"=>"53100",
             "latitude"=>"1.25",
             "longitude"=>"1.826",
+            "area_name"=>"Gombak",
             "fee_category"=>1
         ]);
         Parking::create([
@@ -25,6 +26,7 @@ class ParkingSeeder extends Seeder
             "zip_code"=>"6800",
             "latitude"=>"3.1577567",
             "longitude"=>"101.7511395",
+            "area_name"=>"Ampang Park",
             "fee_category"=>1
         ]);
     }

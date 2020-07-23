@@ -19,6 +19,7 @@ class CreateParkingsTable extends Migration
             $table->integer('zip_code');
             $table->double('latitude');
             $table->double('longitude');
+            $table->string('area_name');
             $table->unsignedBigInteger('fee_category');
             $table->foreign('fee_category')->references('id')->on('fee_categories');
             $table->timestamps();
