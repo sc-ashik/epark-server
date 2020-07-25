@@ -13,6 +13,8 @@ class FeeCategorySeeder extends Seeder
      */
     public function run()
     {
+        FeeCategory::truncate();
+        
         FeeCategory::create([
             "category_name"=> "normal",
             "fee"=> 2.56

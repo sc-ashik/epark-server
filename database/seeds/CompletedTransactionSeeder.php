@@ -17,23 +17,37 @@ class CompletedTransactionSeeder extends Seeder
      */
     public function run()
     {
-        for($i=0;$i<500;$i++){
-            $userId=User::all()->random()->id;
-            $locked_at=Carbon::now()->subMinutes(rand(1,24*60*660));
-            $unlock_requested_at=new Carbon($locked_at);
-            $unlock_requested_at->addMinutes(rand(5,5*60));
-            $fee=$locked_at->floatDiffInRealHours($unlock_requested_at)* FeeCategory::first()->fee;
+        CompletedTransaction::truncate();
+        
+        $toDay=new Carbon();
+        $oldDay=new Carbon();
+        $oldDay->subDay(600);
 
-            CompletedTransaction::create([ 
-                "parking_id"=>Parking::all()->random()->id,
-                "locked_at"=>$locked_at->toDateTimeString(),
-                "unlock_requested_at"=>$unlock_requested_at->toDateTimeString(),
-                "unlock_requested_by"=>$userId,
-                "categories_applied"=>FeeCategory::first()->id,
-                "fee"=>$fee,
-                "transaction_id"=>Payment::create(['amount_paid'=>$fee,'paid_by'=>$userId])->transaction_id,
-                "unlocked_at"=>$unlock_requested_at->toDateTimeString()
-            ]);
+
+        while($oldDay->lessThan($toDay)){
+            $repeat=rand(1,10);
+            while($repeat--){
+                $userId=User::all()->random()->id;
+                $locked_at=$oldDay->addMinutes(rand(1,24*60));
+                $unlock_requested_at=new Carbon($locked_at);
+                $unlock_requested_at->addMinutes(rand(30,5*60));
+                $fee=$locked_at->floatDiffInRealHours($unlock_requested_at)* FeeCategory::first()->fee;
+
+                CompletedTransaction::create([ 
+                    "parking_id"=>Parking::all()->random()->id,
+                    "locked_at"=>$locked_at->toDateTimeString(),
+                    "unlock_requested_at"=>$unlock_requested_at->toDateTimeString(),
+                    "unlock_requested_by"=>$userId,
+                    "categories_applied"=>FeeCategory::first()->id,
+                    "fee"=>$fee,
+                    "transaction_id"=>Payment::create(['amount_paid'=>$fee,'paid_by'=>$userId,'created_at'=>$unlock_requested_at->toDateTimeString(),'updated_at'=>$unlock_requested_at->toDateTimeString()])->transaction_id,
+                    "unlocked_at"=>$unlock_requested_at->toDateTimeString(),
+                    "created_at"=>$unlock_requested_at->toDateTimeString(),
+                    "updated_at"=>$unlock_requested_at->toDateTimeString()
+                ]);
+            }
+            $oldDay->addDay();
+
         }
     }
 

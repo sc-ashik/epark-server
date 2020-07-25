@@ -12,6 +12,8 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        User::truncate();
+            
         $user1=User::create(['name'=>"john doe",'email'=>"client@mail.com",'password'=>bcrypt('pass#$')]);
         $user1->assignRole("client");
         $user2=User::create(['name'=>"john doe",'email'=>"admin@mail.com",'password'=>bcrypt('pass#$')]);

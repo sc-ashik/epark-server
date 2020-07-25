@@ -19,6 +19,9 @@ class RolePermissionSeeder extends Seeder
         // Reset cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
+        Permission::truncate();
+        Role::truncate();
+        
         // create permissions
         Permission::create(['name' => 'unlock parkings']);
         Permission::create(['name' => 'monitor dashboard']);

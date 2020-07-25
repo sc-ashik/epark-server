@@ -12,7 +12,9 @@ class ParkingSeeder extends Seeder
      * @return void
      */
     public function run()
-    {  
+    { 
+        Parking::truncate();
+         
         Parking::create([
             "short_area_name"=>"GOM",
             "zip_code"=>"53100",
@@ -27,6 +29,38 @@ class ParkingSeeder extends Seeder
             "latitude"=>"3.1577567",
             "longitude"=>"101.7511395",
             "area_name"=>"Ampang Park",
+            "fee_category"=>1
+        ]);
+        Parking::create([
+            "short_area_name"=>"AMP",
+            "zip_code"=>"6800",
+            "latitude"=>"4.1577567",
+            "longitude"=>"101.7511395",
+            "area_name"=>"Ampang Park",
+            "fee_category"=>1
+        ]);
+        Parking::create([
+            "short_area_name"=>"KL",
+            "zip_code"=>"6800",
+            "latitude"=>"4.1577567",
+            "longitude"=>"101.7511395",
+            "area_name"=>"Kuala Lumpur",
+            "fee_category"=>1
+        ]);
+        Parking::create([
+            "short_area_name"=>"KL",
+            "zip_code"=>"6800",
+            "latitude"=>"4.1577567",
+            "longitude"=>"101.7511395",
+            "area_name"=>"Kuala Lumpur",
+            "fee_category"=>1
+        ]);
+        Parking::create([
+            "short_area_name"=>"KL",
+            "zip_code"=>"6800",
+            "latitude"=>"4.1577567",
+            "longitude"=>"101.7511395",
+            "area_name"=>"Kuala Lumpur",
             "fee_category"=>1
         ]);
     }
