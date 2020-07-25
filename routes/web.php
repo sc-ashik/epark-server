@@ -21,6 +21,5 @@ Route::get('/login', function () {
     return view('welcome');
 })->name('login');
 
-// Route::get('/hge_webhook' , ['middleware' => 'webhookMiddleware']);
 
 

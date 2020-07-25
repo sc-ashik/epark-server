@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Http\Response;
+ 
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,9 +19,14 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('/login', 'API\UserController@login');
     Route::post('/register', 'API\UserController@register');
 
-    //testing api
+        Route::get('/webhook' , function(){
+        })->middleware("webhook");
+        //testing api
 
     Route::group(['middleware' => ['auth:api','role:admin']], function () {
+
+
+
         Route::post('/lock/{parking_no}', 'TransactionController@lock');
         Route::resources([
             'parking' => 'ParkingController',
