@@ -39,3 +39,22 @@ BEGIN
        select * from G where (_minDuration is NULL or G.duration>= _minDuration) and (_maxDuration is NULL or G.duration<= _maxDuration) ; 
 END;
 $$ LANGUAGE 'plpgsql' STABLE
+
+
+
+
+
+
+
+-- completed transactions a day
+CREATE FUNCTION completed_transactions_max(r completed_transactions)
+RETURNS double precision AS $$
+   with p as( SELECT sum(fee) as total from completed_transactions group by TO_CHAR(unlocked_at :: DATE, 'yyyy-mm-dd'))
+ select max(ceil(p.total)) from p
+$$ LANGUAGE sql STABLE;
+
+CREATE FUNCTION completed_transactions_min(r completed_transactions)
+RETURNS double precision AS $$
+   with p as( SELECT sum(fee) as total from completed_transactions group by TO_CHAR(unlocked_at :: DATE, 'yyyy-mm-dd'))
+ select min(floor(p.total)) from p
+$$ LANGUAGE sql STABLE;
